@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:time_app/services/worldTime.dart';
 
 class ChooseLocation extends StatefulWidget {
   @override
@@ -7,10 +7,16 @@ class ChooseLocation extends StatefulWidget {
 }
 
 class _ChooseLocationState extends State<ChooseLocation> {
-  int counter = 0;
-
- 
-
+  List<WorldTime> locations = [
+    WorldTime(
+        location: 'Syria', avatar: 'syria.png', urlEndPoint: 'Asia/Damascus'),
+    WorldTime(
+        location: 'Lebanon', avatar: 'lebanon.jpg', urlEndPoint: 'Asia/Beirut'),
+    WorldTime(
+        location: 'Germany',
+        avatar: 'germany.png',
+        urlEndPoint: 'Europe/Berlin'),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,26 +27,34 @@ class _ChooseLocationState extends State<ChooseLocation> {
           elevation: 0,
           centerTitle: true,
         ),
-        body: Row(children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RaisedButton.icon(
-              onPressed: () {
-                setState(() {
-                  counter++;
-                });
+        body: ListView.builder(
+          itemCount: locations.length,
+          itemBuilder: (context, index) {
+            return Card(
+                child: ListTile(
+              onTap: () async {
+                try {
+                  /* WorldTime t = WorldTime(
+                      location: 'Syria',
+                      avatar: 'syria.png',
+                      urlEndPoint: 'Asia/Damascus'); */
+                  await locations[index].calculateTime();
+                  Navigator.pushReplacementNamed(context, '/home', arguments: {
+                    'location': locations[index].location,
+                    'flag': locations[index].avatar,
+                    'time': locations[index].getTime(),
+                    'dayOrNight': locations[index].isDayNight
+                  });
+                } catch (e) {
+                  print('Error: $e');
+                }
               },
-              label: Text('Increase counter'),
-              icon: Icon(Icons.add),
-              textColor: Colors.redAccent,
-              elevation: 0,
-            ),
-          ),
-          Text('$counter',
-              style: TextStyle(
-                color: Colors.blue[800],
-                fontSize: 18,
-              ))
-        ]));
+              title: Text(locations[index].location),
+              leading: CircleAvatar(
+                  backgroundImage:
+                      AssetImage('assets/${locations[index].avatar}')),
+            ));
+          },
+        ));
   }
 }
