@@ -17,19 +17,23 @@ class WorldTime {
   }
 
   Future<void> calculateTime() async {
-    //make request
-    Response response =
-        await get('http://worldtimeapi.org/api/timezone/$urlEndPoint');
-    Map data = jsonDecode(response.body);
-    print(data);
+    try {
+      //make request
+      Response response =
+          await get('http://worldtimeapi.org/api/timezone/$urlEndPoint');
+      Map data = jsonDecode(response.body);
+      print(data);
 
-    //get properties from data
-    String dateTime = data['datetime'];
-    String offset = data['utc_offset'].substring(1, 3);
+      //get properties from data
+      String dateTime = data['datetime'];
+      String offset = data['utc_offset'].substring(1, 3);
 
-    //Create DateTime object
-    DateTime date = DateTime.parse(dateTime);
-    date.add(Duration(hours: int.parse(offset)));
-    setTime(date.toString());
+      //Create DateTime object
+      DateTime date = DateTime.parse(dateTime);
+      date.add(Duration(hours: int.parse(offset)));
+      setTime(date.toString());
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }
