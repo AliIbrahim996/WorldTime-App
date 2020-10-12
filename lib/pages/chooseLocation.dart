@@ -17,6 +17,20 @@ class _ChooseLocationState extends State<ChooseLocation> {
         avatar: 'germany.png',
         urlEndPoint: 'Europe/Berlin'),
   ];
+  void updateData(index) async {
+    try {
+      await locations[index].calculateTime();
+      Navigator.pop(context, {
+        'location': locations[index].location,
+        'flag': locations[index].avatar,
+        'time': locations[index].getTime(),
+        'dayOrNight': locations[index].isDayNight
+      });
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,30 +44,18 @@ class _ChooseLocationState extends State<ChooseLocation> {
         body: ListView.builder(
           itemCount: locations.length,
           itemBuilder: (context, index) {
-            return Card(
-                child: ListTile(
-              onTap: () async {
-                try {
-                  /* WorldTime t = WorldTime(
-                      location: 'Syria',
-                      avatar: 'syria.png',
-                      urlEndPoint: 'Asia/Damascus'); */
-                  await locations[index].calculateTime();
-                  Navigator.pushReplacementNamed(context, '/home', arguments: {
-                    'location': locations[index].location,
-                    'flag': locations[index].avatar,
-                    'time': locations[index].getTime(),
-                    'dayOrNight': locations[index].isDayNight
-                  });
-                } catch (e) {
-                  print('Error: $e');
-                }
-              },
-              title: Text(locations[index].location),
-              leading: CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/${locations[index].avatar}')),
-            ));
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
+              child: Card(
+                  child: ListTile(
+                onTap: () => updateData(index),
+                title: Text(locations[index].location),
+                leading: CircleAvatar(
+                    backgroundImage:
+                        AssetImage('assets/${locations[index].avatar}')),
+              )),
+            );
           },
         ));
   }

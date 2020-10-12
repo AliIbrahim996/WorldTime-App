@@ -10,7 +10,7 @@ Map data = {};
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    data = ModalRoute.of(context).settings.arguments;
+    data = data.isNotEmpty ? data : ModalRoute.of(context).settings.arguments;
     print(data);
     String bgImage = data['dayOrNight'] ? 'day.jpg' : 'night.jpeg';
     Color bgColor = data['dayOrNight']
@@ -30,8 +30,17 @@ class _HomeState extends State<Home> {
             child: Column(
               children: <Widget>[
                 FlatButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/chooseLoc');
+                  onPressed: () async {
+                    dynamic result =
+                        await Navigator.pushNamed(context, '/chooseLoc');
+                    setState(() {
+                      data = {
+                        'time': result['time'],
+                        'location': result['location'],
+                        'dayOrNight': result['dayOrNight'],
+                        'flag': result['flag']
+                      };
+                    });
                   },
                   icon: Icon(Icons.edit_location,
                       color: Colors.deepPurple, size: 25.0),
