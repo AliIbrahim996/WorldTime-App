@@ -6,16 +6,16 @@ class Loading extends StatefulWidget {
   _LoadingState createState() => _LoadingState();
 }
 
-String _date = 'Loading';
-
 class _LoadingState extends State<Loading> {
   void setUpTime() async {
     try {
       WorldTime t = WorldTime(
           location: 'Syria', avatar: 'syria.png', urlEndPoint: 'Asia/Damascus');
       await t.calculateTime();
-      setState(() {
-        _date = t.getTime();
+      Navigator.pushReplacementNamed(context, '/home', arguments: {
+        'location' : t.location,
+        'flag':t.avatar,
+        'time':t.getTime()
       });
     } catch (e) {
       print('Error: $e');
@@ -32,9 +32,10 @@ class _LoadingState extends State<Loading> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[400],
-      body: SafeArea(child: Padding(
+      body: SafeArea(
+          child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Text(_date),
+        child: Text('Loading'),
       )),
     );
   }

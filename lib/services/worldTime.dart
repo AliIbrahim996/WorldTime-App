@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 class WorldTime {
   String location; // Location name for UI
+  // ignore: non_constant_identifier_names
   String _Time; // The Time in Location
   String avatar; //url to an asset flag icon of a location
   String urlEndPoint; //location url for api end point
@@ -27,11 +29,12 @@ class WorldTime {
       //get properties from data
       String dateTime = data['datetime'];
       String offset = data['utc_offset'].substring(1, 3);
+     // print(offset);
 
       //Create DateTime object
       DateTime date = DateTime.parse(dateTime);
-      date.add(Duration(hours: int.parse(offset)));
-      setTime(date.toString());
+      date  = date.add(Duration(hours: int.parse(offset)));
+      setTime(DateFormat.jm().format(date));
     } catch (e) {
       print('Error: $e');
     }
