@@ -16,7 +16,8 @@ class _LoadingState extends State<Loading> {
       Navigator.pushReplacementNamed(context, '/home', arguments: {
         'location': t.location,
         'flag': t.avatar,
-        'time': t.getTime()
+        'time': t.getTime(),
+        'dayOrNight': t.isDayNight
       });
     } catch (e) {
       print('Error: $e');
@@ -32,12 +33,12 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.greenAccent[700],
+      backgroundColor: Colors.blueAccent[700],
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Center(
-            child: SpinKitCircle(
+            child: SpinKitFadingCube(
           color: Colors.yellowAccent,
           size: 50.0,
         )),

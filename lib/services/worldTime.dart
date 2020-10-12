@@ -8,6 +8,7 @@ class WorldTime {
   String _Time; // The Time in Location
   String avatar; //url to an asset flag icon of a location
   String urlEndPoint; //location url for api end point
+  bool isDayNight =  false;
 
   WorldTime({this.location, this.avatar, this.urlEndPoint});
   void setTime(String time) {
@@ -29,11 +30,12 @@ class WorldTime {
       //get properties from data
       String dateTime = data['datetime'];
       String offset = data['utc_offset'].substring(1, 3);
-     // print(offset);
+      // print(offset);
 
       //Create DateTime object
       DateTime date = DateTime.parse(dateTime);
-      date  = date.add(Duration(hours: int.parse(offset)));
+      date = date.add(Duration(hours: int.parse(offset)));
+      isDayNight= date.hour > 06 && date.hour < 19 ? true :false;
       setTime(DateFormat.jm().format(date));
     } catch (e) {
       print('Error: $e');
